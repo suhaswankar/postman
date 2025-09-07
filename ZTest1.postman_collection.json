@@ -1,0 +1,1223 @@
+{
+	"info": {
+		"_postman_id": "25547805-cbab-4852-a343-02a7c19f5a06",
+		"name": "ZTest1",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "23733597"
+	},
+	"item": [
+		{
+			"name": "get resp",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"// another way to create global variable inside script\r",
+							"pm.globals.set(\"baseurl\", \"https://postman-echo.com\");"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\" validate status code\", function(){\r",
+							"    pm.response.to.have.status(200);\r",
+							"    pm.response.to.be.ok;\r",
+							"\r",
+							"    //it will validate response is in json format\r",
+							"    pm.response.to.be.json;\r",
+							"});\r",
+							"pm.test(\"validate response time is below than 5 seconds\", function(){\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(5000);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"validate response header have content-type\", function(){\r",
+							"    // it will validate header is available or not.\r",
+							"    pm.expect(pm.response.headers.get(\"content-type\")).to.exist;\r",
+							"    pm.expect(pm.response.headers.get(\"content-length\")).to.exist;\r",
+							"    //or\r",
+							"    pm.response.to.have.header(\"content-type\");\r",
+							"\r",
+							"    // it will validate header value is present\r",
+							"    pm.expect(pm.response.headers.get(\"content-type\")).to.eql(\"application/json; charset=utf-8\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"validate cookies is generated\", function(){\r",
+							"    // it will validate cookies is present in response or not\r",
+							"    pm.expect(pm.cookies.toObject()).to.not.be.empty;\r",
+							"});\r",
+							"pm.test(\"validate cookies fields\", function(){\r",
+							"    // it will validate cookies value.\r",
+							"    pm.expect(pm.cookies.toObject()).to.have.property(\"sails.sid\");\r",
+							"});\r",
+							"\r",
+							"let jsonData;\r",
+							"try {\r",
+							"    jsonData = pm.response.json();\r",
+							"} catch (e) {\r",
+							"    jsonData = {};\r",
+							"}\r",
+							"\r",
+							"pm.test(\"validate response body fields\", function(){\r",
+							"\r",
+							"    // it will validate header have column/filed or not\r",
+							"    pm.expect(jsonData).to.have.property(\"args\");\r",
+							"    pm.expect(jsonData).to.have.property(\"headers\");\r",
+							"    pm.expect(jsonData).to.have.property(\"url\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"validate sub fields of body\", function(){\r",
+							"\r",
+							"    //it will validate sub fields are present or nor\r",
+							"    pm.expect(jsonData.args).to.have.property(\"foo1\");\r",
+							"    pm.expect(jsonData.args).to.have.property(\"foo2\");\r",
+							"    pm.expect(jsonData.headers).to.have.property(\"user-agent\"); \r",
+							"    pm.expect(jsonData.headers).to.have.property(\"accept\")\r",
+							"    pm.expect(jsonData.headers).to.have.property(\"cache-control\")\r",
+							"    pm.expect(jsonData.headers).to.have.property(\"postman-token\") \r",
+							"    pm.expect(jsonData.headers).to.have.property(\"accept-encoding\")\r",
+							"    pm.expect(jsonData.headers).to.have.property(\"cookie\")\r",
+							"    pm.expect(jsonData.headers).to.have.property(\"x-forwarded-proto\")\r",
+							"});\r",
+							"\r",
+							"pm.test(\"validate data type of body\", function(){\r",
+							"\r",
+							"    // it will validate response body date type\r",
+							"    pm.expect(jsonData.args).to.be.an(\"object\");\r",
+							"    pm.expect(jsonData.headers).to.be.an(\"object\");\r",
+							"\r",
+							"    pm.expect(jsonData.args[\"foo1\"]).to.eql(\"bar1\");\r",
+							"    pm.expect(jsonData.headers[\"host\"]).to.eql(\"postman-echo.com\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"validate data received of body\", function(){\r",
+							"\r",
+							"    // it will validate json body keys and its value matching or not\r",
+							"    pm.expect(jsonData.args[\"foo1\"]).to.eql(\"bar1\");\r",
+							"    pm.expect(jsonData.args[\"foo2\"]).to.eql(\"bar2\");\r",
+							"    pm.expect(jsonData.headers[\"host\"]).to.eql(\"postman-echo.com\");\r",
+							"    pm.expect(jsonData.headers[\"user-agent\"]).to.eql(\"PostmanRuntime/7.44.1\");\r",
+							"    pm.expect(jsonData.headers[\"accept\"]).to.eql(\"*/*\");\r",
+							"    pm.expect(jsonData.headers[\"cache-control\"]).to.eql(\"no-cache\");\r",
+							"    pm.expect(jsonData.headers[\"accept-encoding\"]).to.eql(\"gzip, deflate, br\");\r",
+							"    pm.expect(jsonData.headers[\"x-forwarded-proto\"]).to.eql(\"https\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"validate header date\", function(){\r",
+							"\r",
+							"    // it will validate header date is present ot not\r",
+							"    const parsedDate = new Date(pm.response.headers.get(\"Date\"));\r",
+							"    pm.expect(parsedDate).to.be.a(\"date\");\r",
+							"});\r",
+							"\r",
+							"// saving schema in to variable \r",
+							"const jsonschema  = { \r",
+							"  \"type\": \"object\",\r",
+							"  \"properties\": {\r",
+							"    \"data\": {\r",
+							"      \"type\": \"array\",\r",
+							"      \"items\": {\r",
+							"        \"type\": \"object\",\r",
+							"        \"properties\": {\r",
+							"          \"title\": {\r",
+							"            \"type\": \"string\"\r",
+							"          },\r",
+							"          \"author\": {\r",
+							"            \"type\": \"string\"\r",
+							"          },\r",
+							"          \"published\": {\r",
+							"            \"type\": \"integer\"\r",
+							"          }\r",
+							"        },\r",
+							"        \"required\": [\r",
+							"          \"title\",\r",
+							"          \"author\",\r",
+							"          \"published\"\r",
+							"        ]\r",
+							"      }\r",
+							"    }\r",
+							"  }\r",
+							"};\r",
+							"\r",
+							"pm.test(\"validate json schema\", function(){\r",
+							"\r",
+							"    // it will validate response schema is correct or not\r",
+							"   pm.response.to.have.jsonSchema(jsonschema);\r",
+							"});\r",
+							"\r",
+							"// *********************** negative test cases ********************\r",
+							"pm.test(\"validate query param is missing then show error message\", function(){\r",
+							"\r",
+							"    // if any one query parameter is missing in GET url then this test case will fail \r",
+							"    const url = pm.request.url.query.toObject();\r",
+							"    pm.expect(url.foo1).not.to.be.undefined;\r",
+							"    pm.expect(url.foo2).not.to.be.undefined;\r",
+							"\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Validate response when invalid data type is passed\", function () {\r",
+							"\r",
+							"    // if we passed wrong value in query parameter then it will fail the test cases\r",
+							"    const foo1 = pm.request.url.query.get(\"foo1\");\r",
+							"    pm.expect(foo1).to.eql(\"bar1\"); // it will validate exact value of parameter\r",
+							"});\r",
+							"\r",
+							"pm.test(\"validate for wrong url user get 404 error code\", function(){\r",
+							"    //pm.response.to.have.status(404);\r",
+							"    pm.expect(pm.response.code).to.be.oneOf([404,405]);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"validate any unwanted field is not present in response body\", function(){\r",
+							"    // it will check any unwanted field is not present in response body\r",
+							"    pm.expect(jsonData).not.to.have.property(\"unwanted\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"check from wrong http method POST instead of GET\", function(){\r",
+							"    pm.expect(pm.response.code).to.not.eql(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"check if invalid header is received then test should passed\", function(){\r",
+							"    pm.expect(pm.response.headers.get(\"header-cotent\")).to.not.eql(\"text/html\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"checkquery paramater should not be null\", function () {\r",
+							"    pm.expect(jsonData.args.foo1).to.not.be.null;\r",
+							"    pm.expect(jsonData.args.foo2).to.not.be.null;\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseurl}}/get?foo1=bar1&foo2=bar2",
+					"host": [
+						"{{baseurl}}"
+					],
+					"path": [
+						"get"
+					],
+					"query": [
+						{
+							"key": "foo1",
+							"value": "bar1"
+						},
+						{
+							"key": "foo2",
+							"value": "bar2"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "negative test cases",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"//Negative test cases\r",
+							"// 1) verify if wrong http method is pass then show show error message\r",
+							"// 2) verify if any wrong (key)query paramater is passed then show error message \r",
+							"// 3) verify if any wrong (value)query paramater is passed then show error message \r",
+							"// 4) verify if query paramater is empty then show error message \r",
+							"// 5) verify if wrong URL is passed then show error message \r",
+							"// 6) verify if wrong header content passed then show error message \r",
+							"// 7) verify for any wrong body recieved in response\r",
+							"// 8) validate json schema is not wrong\r",
+							"// 9) verif if passed body in get method then show erroe message\r",
+							"//10) verify for fixed value of queiry paramater(value should be as per given only)\r",
+							"\r",
+							"//1) verify if wrong http method is pass then show show error message\r",
+							"pm.test(\"passed wrong http method POST instead of GET\",function(){\r",
+							"   // pm.expect(pm.response.code).to.be.oneOf([404,405]);\r",
+							"   // pm.expect(pm.response.code).to.be.oneOf([200]);\r",
+							"   pm.expect(pm.response.code).to.not.eql(200);\r",
+							"});\r",
+							"\r",
+							"// 2) verify if any wrong (key)query paramater is passed then show error message \r",
+							"pm.test(\"passed wrong key in query paramater\", function(){\r",
+							"    pm.expect(pm.response.code).to.be.eql(404);\r",
+							"});\r",
+							"\r",
+							"// 3) verify if any wrong (value)query paramater is passed then show error message \r",
+							"pm.test(\"check if query parameter(key) is missing then show failed\",function(){\r",
+							"    // convert query paramater in to object. (key:value)pair\r",
+							"    //this case validate only key, not value . if value is not present then still it will pass the case\r",
+							"    const querypara = pm.request.url.query.toObject();\r",
+							"    pm.expect(querypara.foo1).to.be.undefined;\r",
+							"    pm.expect(querypara.foo2).to.be.undefined;\r",
+							"});\r",
+							"\r",
+							"//3) verify if any wrong (value)query paramater is passed then show error message \r",
+							"\r",
+							"pm.test(\"check if query parameter(value) is missing then show failed\", function(){\r",
+							"    const querypara = pm.request.url.query.toObject();\r",
+							"    pm.expect(querypara.foo1).to.not.eql(\"bar1\");\r",
+							"    pm.expect(querypara.foo2).to.not.eql(\"bar2\");\r",
+							"});\r",
+							"\r",
+							"// 4) verify if query paramater is empty then show error message \r",
+							"pm.test(\"check id query paramater is null then show failed\", function(){\r",
+							"    const querypara = pm.request.url.query.toObject();\r",
+							"\r",
+							"    pm.expect(querypara.foo1).to.equal(\"null\");\r",
+							"    pm.expect(querypara.foo2).to.equal(\"null\");\r",
+							"});\r",
+							"\r",
+							"// 5) verify if wrong URL is passed then show error message \r",
+							"pm.test(\"check if wrong URL is passed then show failed\", function(){\r",
+							"    const queryfull = pm.globals.set(\"https://postman-echo.com/get\");\r",
+							"    const geturl = pm.globals.get(queryfull);\r",
+							"    pm.expect(queryfull).to.eql(\"https://postman-echo.com/get\");\r",
+							"});\r",
+							"\r",
+							"// 6) verify if wrong header content passed then show error message \r",
+							"pm.test(\"check if wrong header content is passed the show failed\", function(){\r",
+							"    pm.expect(pm.response.headers.get(\"content-type\")).to.eql(\"text/xml\");\r",
+							"});\r",
+							"\r",
+							"// 7) verify for any wrong body recieved in response\r",
+							"pm.test(\"check if any wrong body received then show failed\", function(){\r",
+							"    const body = pm.response.json();\r",
+							"    pm.expect(body.args).to.be.null;\r",
+							"    pm.expect(body.headers).to.be.null;\r",
+							"    pm.expect(body.url).to.be.null;\r",
+							"});\r",
+							"\r",
+							"// 8) validate json schema is not wrong\r",
+							"// 9) verif if passed body in get method then show erroe message\r",
+							"pm.test(\"check if repsonse body is null then show failed\", function(){\r",
+							"    const body = pm.response.json();\r",
+							"    pm.expect(body).to.be.null;\r",
+							"});\r",
+							"//10) verify for fixed value of queiry paramater(value should be as per given only)\r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://postman-echo.com/get?foo1=bar1&foo2=bar2",
+					"protocol": "https",
+					"host": [
+						"postman-echo",
+						"com"
+					],
+					"path": [
+						"get"
+					],
+					"query": [
+						{
+							"key": "foo1",
+							"value": "bar1"
+						},
+						{
+							"key": "foo2",
+							"value": "bar2"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "positive test cases",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.globals.set(\"baseURL\",\"https://postman-echo.com\");"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Fixed syntax error in test case\r",
+							"// 1) verify status code is 200 for this request\r",
+							"pm.test(\"verify status code is 200 for this request\", function(){\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"// 2) verify response time is below 5s \r",
+							"pm.test(\"verify response time is below 5s\", function(){\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(5000);\r",
+							"});\r",
+							"\r",
+							"// 3) verify request parameter having foo and baz key \r",
+							"pm.test(\"verify request parameter having foo and baz key\", function(){\r",
+							"   const querypara = pm.request.url.query\r",
+							"   pm.expect(querypara.has(\"foo\")).to.be.true;\r",
+							"   pm.expect(querypara.has(\"baz\")).to.be.true;\r",
+							"});\r",
+							"\r",
+							"// 4) verify request parameter having value for foo and baz key \r",
+							"pm.test(\"verify request parameter having value for foo and baz key\", function(){\r",
+							"    const querypara = pm.request.url.query.toObject();\r",
+							"    pm.expect(querypara.foo).to.eql(\"bar\");\r",
+							"    pm.expect(querypara.baz).to.eql(\"value\");\r",
+							"\r",
+							"});\r",
+							" \r",
+							"// 6) verify header having content-type property\r",
+							"pm.test(\"verify header having content-type property\", function(){\r",
+							"    // both are same use any one easy\r",
+							"    pm.response.to.have.header(\"content-type\");\r",
+							"    pm.expect(pm.response.headers.get(\"content-type\")).to.exist;\r",
+							"});\r",
+							"\r",
+							"// 7) verify header having content-type value application/json only\r",
+							"pm.test(\"verify header having content-type value application/json only\",function(){\r",
+							"    pm.expect(pm.response.headers.get(\"content-type\")).to.eql(\"application/json; charset=utf-8\");\r",
+							"}); \r",
+							"// 8) verify header having date and validate dynamic date\r",
+							"pm.test(\"verify header having date and validate dynamic date\", function(){\r",
+							"    pm.response.to.have.header(\"date\")\r",
+							"  //  pm.expect(pm.response.headers.get(\"date\")).to.exist;\r",
+							"  pm.expect(pm.response.headers.get(\"server\")).to.not.be.empty;\r",
+							"});\r",
+							"\r",
+							"// 9) verify body response is properly received\r",
+							"pm.test(\"verify body response is properly received\", function(){\r",
+							"    pm.response.to.have.jsonBody();\r",
+							"});\r",
+							"\r",
+							"// 10) verify body response having property args, headers, URL\r",
+							"pm.test(\"verify body response having property args, headers, URL\", function(){\r",
+							"    const jsondata = pm.response.json();\r",
+							"    pm.expect(jsondata).to.have.property(\"args\");\r",
+							"    pm.expect(jsondata).to.have.property(\"headers\");\r",
+							"    pm.expect(jsondata).to.have.property(\"url\");\r",
+							"});\r",
+							"// 11) verify body args having property foo and baz\r",
+							"pm.test(\"verify body args having property foo and baz\",function(){\r",
+							"    const jsondata = pm.response.json();\r",
+							"    pm.expect(jsondata.args).to.have.property(\"foo\");\r",
+							"    pm.expect(jsondata.args).to.have.property(\"baz\");\r",
+							"});\r",
+							"// 12) verify body args foo value is bar\r",
+							"// 13) verify body args baz value is value\r",
+							"pm.test(\"verify body args foo value is bar\",function(){\r",
+							"    const jsondata = pm.response.json();\r",
+							"    pm.expect(jsondata.args[\"foo\"]).to.eql(\"bar\");\r",
+							"    pm.expect(jsondata.args[\"baz\"]).to.eql(\"value\");\r",
+							"    pm.expect(jsondata.args.foo).to.not.be.undefined;\r",
+							"});\r",
+							"\r",
+							"// 14) verify body args foo and baz is only in string \r",
+							"pm.test(\"verify body args foo and baz is only in string\", function(){\r",
+							"    const jsondata = pm.response.json();\r",
+							"    pm.expect(jsondata.args).to.be.a(\"object\");\r",
+							"    pm.expect(jsondata.args.foo).to.be.a(\"string\");\r",
+							"    pm.expect(jsondata.args.baz).to.be.a(\"string\");\r",
+							"\r",
+							"});\r",
+							"// 15) verify body headers having property host, user - agent, accept, postman - token, accept - encoding, cookie, x - forwarded - proto\r",
+							"pm.test(\"verify body headers having property host, user - agent, accept, postman - token, accept - encoding, cookie, x - forwarded - proto\", function(){\r",
+							"    const jsondata = pm.response.json();\r",
+							"    pm.expect(jsondata.headers).to.have.property(\"host\");\r",
+							"    pm.expect(jsondata.headers).to.be.a(\"object\");\r",
+							"    pm.expect(jsondata.headers.host).to.be.a(\"string\");\r",
+							"});\r",
+							"// 16) verify all body headers having proper value\r",
+							"pm.test(\"verify all body headers having proper value\", function(){\r",
+							"    const jsondata = pm.response.json();\r",
+							"    pm.expect(jsondata.headers[\"host\"]).to.eql(\"postman-echo.com\");\r",
+							"    pm.expect(jsondata.headers[\"user-agent\"]).to.eql(\"PostmanRuntime/7.44.1\");\r",
+							"\r",
+							"});\r",
+							"// 17) verify body URL is same as request URL\r",
+							"pm.test(\"verify body URL is same as request URL\", function(){\r",
+							"    const jsondata = pm.response.json();\r",
+							"    pm.expect(jsondata.url).to.be.a(\"string\");\r",
+							"    pm.expect(jsondata.url).to.eql(\"https://postman-echo.com/get?foo=bar&baz=value\");\r",
+							"\r",
+							"});\r",
+							"// 18) verify json schema of response body\r",
+							"const jsonschema = {\r",
+							"  //\"$schema\": \"http://json-schema.org/draft-04/schema#\",\r",
+							"  \"type\": \"object\",\r",
+							"  \"properties\": {\r",
+							"    \"args\": {\r",
+							"      \"type\": \"object\",\r",
+							"      \"properties\": {\r",
+							"        \"foo\": {\r",
+							"          \"type\": \"string\"\r",
+							"        },\r",
+							"        \"baz\": {\r",
+							"          \"type\": \"string\"\r",
+							"        }\r",
+							"      },\r",
+							"      \"required\": [\r",
+							"        \"foo\",\r",
+							"        \"baz\"\r",
+							"      ]\r",
+							"    },\r",
+							"    \"headers\": {\r",
+							"      \"type\": \"object\",\r",
+							"      \"properties\": {\r",
+							"        \"host\": {\r",
+							"          \"type\": \"string\"\r",
+							"        },\r",
+							"        \"user-agent\": {\r",
+							"          \"type\": \"string\"\r",
+							"        },\r",
+							"        \"accept\": {\r",
+							"          \"type\": \"string\"\r",
+							"        },\r",
+							"        \"postman-token\": {\r",
+							"          \"type\": \"string\"\r",
+							"        },\r",
+							"        \"accept-encoding\": {\r",
+							"          \"type\": \"string\"\r",
+							"        },\r",
+							"        \"cookie\": {\r",
+							"          \"type\": \"string\"\r",
+							"        },\r",
+							"        \"x-forwarded-proto\": {\r",
+							"          \"type\": \"string\"\r",
+							"        }\r",
+							"      },\r",
+							"      \"required\": [\r",
+							"        \"host\",\r",
+							"        \"user-agent\",\r",
+							"        \"accept\",\r",
+							"        \"postman-token\",\r",
+							"        \"accept-encoding\",\r",
+							"        \"cookie\",\r",
+							"        \"x-forwarded-proto\"\r",
+							"      ]\r",
+							"    },\r",
+							"    \"url\": {\r",
+							"      \"type\": \"string\"\r",
+							"    }\r",
+							"  },\r",
+							"  \"required\": [\r",
+							"    \"args\",\r",
+							"    \"headers\",\r",
+							"    \"url\"\r",
+							"  ]\r",
+							"}\r",
+							"pm.test(\"validate json schema\",function(){\r",
+							"   // pm.response.to.have.jsonBody(jsonschema);\r",
+							"    pm.response.to.have.jsonSchema(jsonschema);\r",
+							"})\r",
+							"// 19) verify response cookies is created\r",
+							"pm.test(\"verify response cookies is created\", function(){\r",
+							"   // pm.expect(pm.cookies.get(\"sails.sid\")).to.exist;\r",
+							"    pm.cookies.to.have(\"sails.sid\").to.be.true;\r",
+							"});\r",
+							"// 21) verify response cookies is same as request cookies\r",
+							"// pm.test(\"verify response cookies is same as request cookies\", function(){\r",
+							"//     pm.expect(pm.cookies.get(\"sails.sid\")).to.eql(\"s%3AUK3eIwaLcBOMWYvElmFi1py-4u...\");\r",
+							"// });\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseURL}}/get?foo=bar&baz=value",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"get"
+					],
+					"query": [
+						{
+							"key": "foo",
+							"value": "bar"
+						},
+						{
+							"key": "baz",
+							"value": "value"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "LoginAPIBasicAuth",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"let logindata = [\r",
+							" {\r",
+							"  \"username\": \"suhas\",\r",
+							"  \"password\": \"suhas123\"\r",
+							" },\r",
+							" {\r",
+							"  \"username\": \"suhas1\",\r",
+							"  \"password\": \"suhas@1\"\r",
+							" },\r",
+							" {\r",
+							"  \"username\": \"suhas@1\",\r",
+							"  \"password\": \"suhas@12\"\r",
+							" },\r",
+							" {\r",
+							"  \"username\": 1233,\r",
+							"  \"password\": \"suhs\"\r",
+							" },\r",
+							" {\r",
+							"  \"username\": \"asde$%\",\r",
+							"  \"password\": \"suhas#$12\"\r",
+							" }\r",
+							"]\r",
+							"\r",
+							"pm.environment.set(\"logindata\", JSON.stringify(logindata));\r",
+							"\r",
+							"console.log(\"Sending login data: \", logindata);\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status code is 200\", function () {",
+							"    pm.expect(pm.response.code).to.equal(200);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Response has required fields\", function () {",
+							"    const responseData = pm.response.json();",
+							"    ",
+							"    pm.expect(responseData).to.be.an('object');",
+							"    pm.expect(responseData).to.have.property('authenticated').that.is.a('boolean');",
+							"});",
+							"",
+							"",
+							"pm.test(\"Authenticated field should be a boolean\", function () {",
+							"    const responseData = pm.response.json();",
+							"    ",
+							"    pm.expect(responseData).to.be.an('object');",
+							"    pm.expect(responseData.authenticated).to.be.a('boolean');",
+							"});",
+							"",
+							"",
+							"pm.test(\"Response Content-Type is application/json\", function () {",
+							"    pm.expect(pm.response.headers.get('Content-Type')).to.include(\"application/json\");",
+							"});",
+							"",
+							"",
+							"pm.test(\"Response time is less than 200ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "password",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "postman",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{{logindata}}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://postman-echo.com/basic-auth",
+					"protocol": "https",
+					"host": [
+						"postman-echo",
+						"com"
+					],
+					"path": [
+						"basic-auth"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "https://reqres.in/api/login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status code is 200\", function () {",
+							"    pm.expect(pm.response.code).to.equal(200);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Response contains the required fields\", function () {",
+							"    const responseData = pm.response.json();",
+							"    ",
+							"    pm.expect(responseData).to.be.an('object');",
+							"    pm.expect(responseData.token).to.exist;",
+							"});",
+							"",
+							"",
+							"pm.test(\"Token must be a non-empty string\", function () {",
+							"    const responseData = pm.response.json();",
+							"    ",
+							"    pm.expect(responseData).to.be.an('object');",
+							"    pm.expect(responseData.token).to.exist.and.to.be.a('string').and.to.have.lengthOf.at.least(1, \"Token should not be empty\");",
+							"});",
+							"",
+							"",
+							"pm.test(\"Response time is less than 200ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(200);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Content-Type is application/json\", function () {",
+							"    pm.expect(pm.response.headers.get('Content-Type')).to.equal('application/json; charset=utf-8');",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "apikey",
+					"apikey": [
+						{
+							"key": "value",
+							"value": "reqres-free-v1",
+							"type": "string"
+						},
+						{
+							"key": "key",
+							"value": "x-api-key",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"email\": \"eve.holt@reqres.in\", \"password\": \"cityslicka\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://reqres.in/api/login",
+					"protocol": "https",
+					"host": [
+						"reqres",
+						"in"
+					],
+					"path": [
+						"api",
+						"login"
+					]
+				},
+				"description": "Generated from cURL: curl -X POST https://reqres.in/api/login \\\r\n  -H \"Content-Type: application/json\" \\\r\n  -d '{\"email\": \"eve.holt@reqres.in\", \"password\": \"cityslicka\"}'"
+			},
+			"response": []
+		},
+		{
+			"name": "api.openweathermap.org/data/2.5/forecast/daily?q=pune&cnt=1&appid=cee1e818c5e66ff84eb95876a3561485",
+			"request": {
+				"auth": {
+					"type": "apikey",
+					"apikey": [
+						{
+							"key": "in",
+							"value": "query",
+							"type": "string"
+						},
+						{
+							"key": "value",
+							"value": "cee1e818c5e66ff84eb95876a3561485",
+							"type": "string"
+						},
+						{
+							"key": "key",
+							"value": "appid",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "api.openweathermap.org/data/2.5/forecast/daily?q=pune&cnt=1&appid=cee1e818c5e66ff84eb95876a3561485",
+					"host": [
+						"api",
+						"openweathermap",
+						"org"
+					],
+					"path": [
+						"data",
+						"2.5",
+						"forecast",
+						"daily"
+					],
+					"query": [
+						{
+							"key": "q",
+							"value": "pune"
+						},
+						{
+							"key": "cnt",
+							"value": "1"
+						},
+						{
+							"key": "appid",
+							"value": "cee1e818c5e66ff84eb95876a3561485"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "https://postman-echo.com",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status code is 200\", function () {",
+							"    pm.expect(pm.response.code).to.eql(200);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Content-Type is 'text/html'\", function () {",
+							"    pm.expect(pm.response.headers.get('Content-Type')).to.eql('text/html');",
+							"});",
+							"",
+							"",
+							"pm.test(\"Response body is an empty string\", function () {",
+							"    const responseData = pm.response.text();",
+							"    pm.expect(responseData).to.equal(\"\");",
+							"});",
+							"",
+							"",
+							"pm.test(\"Response time is less than 200ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(200);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Response headers contain 'Content-Length'\", function () {",
+							"    pm.expect(pm.response.headers.has('Content-Length')).to.be.true;",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer <YOUR-TOKEN>",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://postman-echo.com",
+					"protocol": "https",
+					"host": [
+						"postman-echo",
+						"com"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "New Request",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// validating request body key\r",
+							"\r",
+							"pm.test(\"validate request body\", function(){\r",
+							"// convert raw request body into json object for validation of key value pairs.\r",
+							"    let requestbody = JSON.parse(pm.request.body.raw);\r",
+							"\r",
+							"    pm.expect(requestbody).to.have.property(\"firstName\");\r",
+							"    pm.expect(requestbody).to.have.property(\"lastName\");\r",
+							"    pm.expect(requestbody.address).to.have.property(\"line1\");\r",
+							"});\r",
+							"\r",
+							"//vaidate request body have value\r",
+							"pm.test(\"valiadte request body key have value\", function(){\r",
+							"  let requestbody = JSON.parse(pm.request.body.raw);\r",
+							"\r",
+							"    pm.expect(requestbody.firstName).to.not.be.empty;\r",
+							"    pm.expect(requestbody.address.line1).to.not.be.empty;\r",
+							"});\r",
+							"\r",
+							"// valodate request header\r",
+							"pm.test(\"valiadte request header\", function(){\r",
+							"    pm.expect(pm.request.headers.get(\"Content-Type\"));\r",
+							"    pm.expect(pm.request.headers.get(\"Content-type\")).to.eql(\"application/json\");\r",
+							"});\r",
+							"\r",
+							"\r",
+							"// validate request URL\r",
+							"pm.test(\"valiadte request url\", function(){\r",
+							"\r",
+							"    let url = pm.request.url.path;\r",
+							"\r",
+							"    pm.expect(url).to.include(\"post\");\r",
+							"});\r",
+							"\r",
+							"//validate response statuc code\r",
+							"pm.test(\"validate response code\", function(){\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"// validate response time\r",
+							"pm.test(\"validate repsonse time\", function(){\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(5000);\r",
+							"});\r",
+							"\r",
+							"// validate response body\r",
+							"pm.test(\"validate repsonse body\", function(){\r",
+							"    let jsonbody = pm.response.json();\r",
+							"\r",
+							"    pm.expect(jsonbody).to.have.property(\"data\");\r",
+							"    pm.expect(jsonbody.data).to.have.property(\"firstName\")\r",
+							"    pm.expect(jsonbody.data.firstName).to.not.be.empty;\r",
+							"    pm.expect(jsonbody.data.address).to.have.property(\"line1\");\r",
+							"    pm.expect(jsonbody.data.address.line1).to.not.be.empty;\r",
+							"    pm.expect(jsonbody.json).to.have.property(\"firstName\");\r",
+							"    pm.expect(jsonbody.json.createdAt).to.not.be.empty;\r",
+							"\r",
+							"    pm.expect(jsonbody.data).to.have.nested.property(\"address.line1\");\r",
+							"});\r",
+							"\r",
+							"// validate repsonse header\r",
+							"pm.test(\"validate repsonse header\", function(){\r",
+							"    pm.expect(pm.response.headers.get(\"Content-Type\"));\r",
+							"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql(\"application/json; charset=utf-8\");\r",
+							"});\r",
+							"\r",
+							"// valiadate cookies\r",
+							"pm.test(\"validate cookies\", function(){\r",
+							"    // check the cookes is exist\r",
+							"    pm.expect(pm.cookies.has(\"sails.sid\")).to.be.true;\r",
+							"\r",
+							"    // check the k=cookies value is not empty\r",
+							"    pm.expect(pm.cookies.get(\"sails.sid\")).to.not.be.empty;\r",
+							"});\r",
+							"\r",
+							"const jsonschema = {\r",
+							" // \"$schema\": \"http://json-schema.org/draft-04/schema#\",\r",
+							"  \"type\": \"object\",\r",
+							"  \"properties\": {\r",
+							"    \"args\": {\r",
+							"      \"type\": \"object\"\r",
+							"    },\r",
+							"    \"data\": {\r",
+							"      \"type\": \"object\",\r",
+							"      \"properties\": {\r",
+							"        \"firstName\": {\r",
+							"          \"type\": \"string\"\r",
+							"        },\r",
+							"        \"lastName\": {\r",
+							"          \"type\": \"string\"\r",
+							"        },\r",
+							"        \"createdAt\": {\r",
+							"          \"type\": \"string\"\r",
+							"        },\r",
+							"        \"address\": {\r",
+							"          \"type\": \"object\",\r",
+							"          \"properties\": {\r",
+							"            \"line1\": {\r",
+							"              \"type\": \"string\"\r",
+							"            },\r",
+							"            \"line2\": {\r",
+							"              \"type\": \"string\"\r",
+							"            },\r",
+							"            \"country\": {\r",
+							"              \"type\": \"string\"\r",
+							"            }\r",
+							"          },\r",
+							"          \"required\": [\r",
+							"            \"line1\",\r",
+							"            \"line2\",\r",
+							"            \"country\"\r",
+							"          ]\r",
+							"        }\r",
+							"      },\r",
+							"      \"required\": [\r",
+							"        \"firstName\",\r",
+							"        \"lastName\",\r",
+							"        \"createdAt\",\r",
+							"        \"address\"\r",
+							"      ]\r",
+							"    },\r",
+							"    \"files\": {\r",
+							"      \"type\": \"object\"\r",
+							"    },\r",
+							"    \"form\": {\r",
+							"      \"type\": \"object\"\r",
+							"    },\r",
+							"    \"headers\": {\r",
+							"      \"type\": \"object\",\r",
+							"      \"properties\": {\r",
+							"        \"host\": {\r",
+							"          \"type\": \"string\"\r",
+							"        },\r",
+							"        \"x-request-start\": {\r",
+							"          \"type\": \"string\"\r",
+							"        },\r",
+							"        \"connection\": {\r",
+							"          \"type\": \"string\"\r",
+							"        },\r",
+							"        \"content-length\": {\r",
+							"          \"type\": \"string\"\r",
+							"        },\r",
+							"        \"x-forwarded-proto\": {\r",
+							"          \"type\": \"string\"\r",
+							"        },\r",
+							"        \"x-forwarded-port\": {\r",
+							"          \"type\": \"string\"\r",
+							"        },\r",
+							"        \"x-amzn-trace-id\": {\r",
+							"          \"type\": \"string\"\r",
+							"        },\r",
+							"        \"content-type\": {\r",
+							"          \"type\": \"string\"\r",
+							"        },\r",
+							"        \"user-agent\": {\r",
+							"          \"type\": \"string\"\r",
+							"        },\r",
+							"        \"accept\": {\r",
+							"          \"type\": \"string\"\r",
+							"        },\r",
+							"        \"postman-token\": {\r",
+							"          \"type\": \"string\"\r",
+							"        },\r",
+							"        \"accept-encoding\": {\r",
+							"          \"type\": \"string\"\r",
+							"        },\r",
+							"        \"cookie\": {\r",
+							"          \"type\": \"string\"\r",
+							"        }\r",
+							"      },\r",
+							"      \"required\": [\r",
+							"        \"host\",\r",
+							"        \"x-request-start\",\r",
+							"        \"connection\",\r",
+							"        \"content-length\",\r",
+							"        \"x-forwarded-proto\",\r",
+							"        \"x-forwarded-port\",\r",
+							"        \"x-amzn-trace-id\",\r",
+							"        \"content-type\",\r",
+							"        \"user-agent\",\r",
+							"        \"accept\",\r",
+							"        \"postman-token\",\r",
+							"        \"accept-encoding\",\r",
+							"        \"cookie\"\r",
+							"      ]\r",
+							"    },\r",
+							"    \"json\": {\r",
+							"      \"type\": \"object\",\r",
+							"      \"properties\": {\r",
+							"        \"firstName\": {\r",
+							"          \"type\": \"string\"\r",
+							"        },\r",
+							"        \"lastName\": {\r",
+							"          \"type\": \"string\"\r",
+							"        },\r",
+							"        \"createdAt\": {\r",
+							"          \"type\": \"string\"\r",
+							"        },\r",
+							"        \"address\": {\r",
+							"          \"type\": \"object\",\r",
+							"          \"properties\": {\r",
+							"            \"line1\": {\r",
+							"              \"type\": \"string\"\r",
+							"            },\r",
+							"            \"line2\": {\r",
+							"              \"type\": \"string\"\r",
+							"            },\r",
+							"            \"country\": {\r",
+							"              \"type\": \"string\"\r",
+							"            }\r",
+							"          },\r",
+							"          \"required\": [\r",
+							"            \"line1\",\r",
+							"            \"line2\",\r",
+							"            \"country\"\r",
+							"          ]\r",
+							"        }\r",
+							"      },\r",
+							"      \"required\": [\r",
+							"        \"firstName\",\r",
+							"        \"lastName\",\r",
+							"        \"createdAt\",\r",
+							"        \"address\"\r",
+							"      ]\r",
+							"    },\r",
+							"    \"url\": {\r",
+							"      \"type\": \"string\"\r",
+							"    }\r",
+							"  },\r",
+							"  \"required\": [\r",
+							"    \"args\",\r",
+							"    \"data\",\r",
+							"    \"files\",\r",
+							"    \"form\",\r",
+							"    \"headers\",\r",
+							"    \"json\",\r",
+							"    \"url\"\r",
+							"  ]\r",
+							"}\r",
+							"\r",
+							"pm.test(\"validate json schem\", function(){\r",
+							"    pm.response.to.have.jsonSchema(jsonschema);\r",
+							"});\r",
+							"\r",
+							"//validte reqiest methods\r",
+							"pm.test(\"validate method\", function(){\r",
+							"    pm.expect(pm.request.method).to.eql(\"POST\");\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"firstName\":\"{{$randomFirstName}}\" ,\r\n    \"lastName\": \"{{$randomLastName}}\",\r\n    \"createdAt\": \"{{$isoTimestamp}}\",\r\n    \"address\": {\r\n        \"line1\": \"{{$randomStreetAddress}}\",\r\n        \"line2\":\"{{$randomStreetName}}\" ,\r\n        \"country\":\"{{$randomCountry}}\"\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://postman-echo.com/post",
+					"protocol": "https",
+					"host": [
+						"postman-echo",
+						"com"
+					],
+					"path": [
+						"post"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseurl",
+			"value": "https://postman-echo.com",
+			"type": "string",
+			"disabled": true
+		}
+	]
+}
