@@ -1,7 +1,7 @@
 {
 	"info": {
 		"_postman_id": "a1512654-3a0f-4d18-a368-792411a913b9",
-		"name": "MyCollection",
+		"name": "Positive",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "23733597"
 	},
@@ -303,99 +303,6 @@
 					]
 				},
 				"description": "Generated from cURL: curl -X 'POST' \\\r\n  'https://petstore.swagger.io/v2/pet' \\\r\n  -H 'accept: application/json' \\\r\n  -H 'Content-Type: application/json' \\\r\n  -d '{\r\n  \"id\": 0,\r\n  \"category\": {\r\n    \"id\": 0,\r\n    \"name\": \"string\"\r\n  },\r\n  \"name\": \"doggie\",\r\n  \"photoUrls\": [\r\n    \"string\"\r\n  ],\r\n  \"tags\": [\r\n    {\r\n      \"id\": 0,\r\n      \"name\": \"string\"\r\n    }\r\n  ],\r\n  \"status\": \"available\"\r\n}'"
-			},
-			"response": []
-		},
-		{
-			"name": "negative",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"// negative test cases\r",
-							"let url = pm.request.url.toString();\r",
-							"let requestbody = JSON.parse(pm.request.body.raw);\r",
-							"var responsebody = pm.response.json();\r",
-							"\r",
-							"\r",
-							"// verify if URL is wrong then user get 404 status code\r",
-							"pm.test(\"verify if URL is wrong then user get 404 status code\",function(){\r",
-							"\r",
-							"\r",
-							"    if(url !== \"https://petstore.swagger.io/v2/pet\"){\r",
-							"        pm.expect(pm.response.code).to.be.eql(404)\r",
-							"    }else {\r",
-							"        pm.expect.fail(\"URL is correct, skipping this test\");\r",
-							"    }\r",
-							"});\r",
-							"\r",
-							"//verify if response body mising any property the user get 404 status code \r",
-							"var responseprop = [\"id\",\"category\",\"name\",\"photoUrls\",\"tags\",\"status\"];\r",
-							"pm.test(\"verify if response body missing property user get 404 status code\",function(){\r",
-							"    var keys = Object.keys(responseprop);\r",
-							"\r",
-							"    keys.forEach(key => {\r",
-							"        pm.expect(responseprop, \"extra property present\"+keys).to.include(key);\r",
-							"    });\r",
-							"    keys.forEach(prop => {\r",
-							"        pm.expect(kesy ,\" missing property\" + keys).to.include(prop);\r",
-							"    });\r",
-							"});\r",
-							"\r",
-							"//verify if content type is missing then get 404 code\r",
-							"pm.test(\"verify content-type is missing then get 404 code\",function(){\r",
-							"    var content = pm.response.headers.get(\"Content-Type\");\r",
-							"\r",
-							"    if(content === undefined){\r",
-							"        pm.expect(pm.response.code).to.eql(415);\r",
-							"    }\r",
-							"    else{\r",
-							"        pm.expect.fail(\"content-type is correct \"+ content);\r",
-							"    }\r",
-							"});\r",
-							""
-						],
-						"type": "text/javascript",
-						"packages": {}
-					}
-				}
-			],
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "accept",
-						"value": "application/json"
-					},
-					{
-						"key": "Content-Type",
-						"value": "application/json"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n  \"id\": 0,\r\n  \"category\": {\r\n    \"id\": 0,\r\n    \"name\": \"string\"\r\n  },\r\n  \"name\": \"doggie\",\r\n  \"photoUrls\": [\r\n    \"string\"\r\n  ],\r\n  \"tags\": [\r\n    {\r\n      \"id\": 0,\r\n      \"name\": \"string\"\r\n    }\r\n  ],\r\n  \"status\": \"available\"\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "https://petstore.swagger.io/v2/pet",
-					"protocol": "https",
-					"host": [
-						"petstore",
-						"swagger",
-						"io"
-					],
-					"path": [
-						"v2",
-						"pet"
-					]
-				},
-				"description": "Generated from cURL: curl --location 'https://petstore.swagger.io/v2/pet' \\\r\n--header 'accept: application/json' \\\r\n--header 'Content-Type: application/json' \\\r\n--data '{\r\n  \"id\": 0,\r\n  \"category\": {\r\n    \"id\": 0,\r\n    \"name\": \"string\"\r\n  },\r\n  \"name\": \"doggie\",\r\n  \"photoUrls\": [\r\n    \"string\"\r\n  ],\r\n  \"tags\": [\r\n    {\r\n      \"id\": 0,\r\n      \"name\": \"string\"\r\n    }\r\n  ],\r\n  \"status\": \"available\"\r\n}'"
 			},
 			"response": []
 		}
